@@ -1,40 +1,58 @@
 import React from 'react';
 
 import './styles.css';
-
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
-function TeacherItem() {
+import api from '../../services/api';
+
+export interface Teacher {
+  id: number;
+  avatar: string;
+  bio: string;
+  cost: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps{
+    teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id,
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://avatars2.githubusercontent.com/u/52224050?s=460&u=39842a3a7ca87d3c7a40b454fe20f9ad2507209d&v=4"
-          alt="Jonathan Dias"
-        />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
           <strong>Jonathan Dias</strong>
           <span>Back-end</span>
         </div>
       </header>
-      <p>
-        Desenvolvedor Web Fullstack
-        <br />
-        Venha aprender SpringBoot, um dos frameworks mais utilizados no momento.
-      </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 80,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button type="button">
+        <a
+          onClick={createNewConnection}
+          target="_blank"
+          href={`https://wa.me/${teacher.whatsapp}`}
+        >
           <img src={whatsappIcon} alt="Whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
-}
+};
 
 export default TeacherItem;
